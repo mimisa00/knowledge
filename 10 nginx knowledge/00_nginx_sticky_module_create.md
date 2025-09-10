@@ -93,6 +93,27 @@ TLS SNI support enabled
 configure arguments: --prefix=/usr/local/nginx --sbin-path=/usr/sbin/nginx --add-module=/opt/nginx/nginx-sticky-module-ng --conf-path=/etc/nginx/nginx.conf --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --pid-path=/var/log/run/nginx.pid --lock-path=/var/log/lock/subsys/nginx --with-openssl=/usr/local/src/openssl-1.0.2h --with-http_gzip_static_module --with-http_realip_module --with-http_stub_status_module --with-http_ssl_module --with-http_addition_module --with-stream --with-stream_ssl_module --with-http_v2_module --with-threads
 ```
 
+#### 編輯 nginx 
+```
+location /dashboard/ {
+  proxy_pass http://upstream_dashboard;
+  proxy_set_header Host            $host;
+  proxy_set_header X-Real-IP       $remote_addr;
+  proxy_set_header X-Forwarded-for $proxy_add_x_forwarded_for;
+  port_in_redirect off;
+  proxy_read_timeout 180s;
+}
+
+#在 upstream 加上 sticky 參數
+upstream upstream_dashboard {
+  sticky path=/dashboard/ expires=4h  name=_sticky;
+  server 127.0.0.1:8080;
+  server my-domain.com:8080;
+  server 192.168.0.1:8080;
+  keepalive 2000;
+}
+```
+
 #### 檢查nginx 設定正確，無誤後啟動
 ```
 nginx -t
