@@ -2,6 +2,7 @@
 - 需至 bot father 建立專用機器人，privacy mode 需開啟內聯回應模式
 - 透過程式定時監控 bot 本身在各個 chat 接收到的訊息，再控制 bot 回應相關 chat 呼應的動作
 
+
 ## 如何在 Telegram 操作 Bot 互動 
 1. 創建一個 Group 然後將 bot 加到該窗口
 2. 觸發 /start 指令然後會出現以下的控制表單  
