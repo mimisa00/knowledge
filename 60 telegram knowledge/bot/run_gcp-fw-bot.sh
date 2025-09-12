@@ -1,0 +1,31 @@
+#!/bin/bash
+
+ap_name=gcp-fw-bot
+
+##################
+#                #
+# docker trigger #
+#                #
+##################
+if docker ps -a | grep ${ap_name}$; then
+  docker rm -f ${ap_name}
+  docker rmi $ap_name:latest
+fi
+
+docker build -t ${ap_name}:latest /home/fusion-ap/${ap_name}/
+docker run -d \
+  --name ${ap_name} \
+  --restart=always --log-opt max-size=10m --log-opt max-file=10 \
+  -e TELEGRAM_TOKEN="6395609926:AAHnUPPor-KHY7yPqYQduijBd1Pil2OIt_Q" \
+  -e API_URL="https://fw-trigger-whitelist-172507983612.asia-east1.run.app" \
+  -e API_AUTH="Bearer k2jewrtdpIWASQ0gwEo7_mYfHVgpV69q" \
+  -e ALLOWED_CHAT_IDS="1002529578334" \
+  -e ALLOWED_USERS="478605799","838268769","1272303435","5336268205","7208095646" \
+  -v /home/fusion-ap/${ap_name}/coms.txt:/app/coms.txt \
+  -v /home/fusion-ap/${ap_name}/bot.py:/app/bot.py \
+  -v /home/fusion-ap/${ap_name}/fw.log:/app/fw.log \
+  ${ap_name}:latest
+
+#
+#ALLOWED_USERS="478605799","838268769","1272303435","5336268205","7208095646"
+#ALLOWED_USERS="shaun"    ,"nick"     ,"gino"      ,"hark"      ,"elisa"
