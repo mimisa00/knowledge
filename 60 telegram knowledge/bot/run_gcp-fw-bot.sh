@@ -17,11 +17,12 @@ docker run -d \
   --name ${ap_name} \
   --restart=always --log-opt max-size=10m --log-opt max-file=10 \
   -e TELEGRAM_TOKEN="6395609***:***" \
-  -e API_URL="https://fw-trigger-whitelist-172507983612.asia-east1.run.app" \
-  -e API_AUTH="Bearer k2jewrtdpIWASQ0gwEo7_mYfHVgp***" \
-  -e ALLOWED_CHAT_IDS="1002529578334" \
+  -e API_URL="https://fw-trigger-whitelist-"****.asia-east1.run.app" \
+  -e API_AUTH="Bearer ***" \
+  -e ALLOWED_CHAT_IDS="****" \
   -e ALLOWED_USERS="123","456" \
   -v /home/fusion-ap/${ap_name}/coms.txt:/app/coms.txt \
   -v /home/fusion-ap/${ap_name}/bot.py:/app/bot.py \
   -v /home/fusion-ap/${ap_name}/fw.log:/app/fw.log \
   ${ap_name}:latest
+
