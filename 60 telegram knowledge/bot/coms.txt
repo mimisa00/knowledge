@@ -1,7 +1,4 @@
-cy
-xs
-cgp
-ex
-sbc
-wj
-uk
+com_a
+com_b
+com_c
+com_d
