@@ -34,13 +34,10 @@ bot 創建後，預設僅接受指令訊息 /xxxx
 <img width="300" height="171" alt="image" src="https://github.com/user-attachments/assets/0434170e-69f4-44b4-ad09-abafae84c62c" />  
 若要可以接收一般訊息，需將 bot Group Privacy mode 關閉 (https://core.telegram.org/bots/features#privacy-mode)   
 請在 BotFather 窗口依照以下說明進行關閉
-- 找出自己己創建機器人   
+找出自己己創建機器人 > 點擊 Bot Settings > 點擊 Group Privacy > 點擊 Trun Off 關閉 Privacy mode 
 <img width="611" height="950" alt="image" src="https://github.com/user-attachments/assets/a22d7e78-9d8e-43a2-a492-f61c254fdf82" />  
-- 點擊 Bot Settings  
 <img width="300" height="152" alt="image" src="https://github.com/user-attachments/assets/6513e3dc-0617-4f5b-be11-2a56ca794d88" />  
-- 點擊 Group Privacy  
 <img width="284" height="300" alt="image" src="https://github.com/user-attachments/assets/bda85bf3-a312-4b1c-9609-62452f005ef3" />  
-- 點擊 Trun Off 關閉 Privacy mode  
 <img width="300" height="84" alt="image" src="https://github.com/user-attachments/assets/d2b399de-a5d0-4566-9190-2cf13ee069a1" />  
 
 
