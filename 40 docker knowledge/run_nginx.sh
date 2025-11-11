@@ -59,7 +59,7 @@ docker run -itd -p 80:80 -p 443:443 \
 -v $fd_name/$ap_name/logs:/var/log/nginx \
 -v /etc/localtime:/etc/localtime:ro \
 --name $ap_name \
-e1-nexus.iwerp.net:8083/werp-nginx:1.16.1
+e1-nexus.iwerp.net:8083/nginx:1.16.1
 
 
 ############################
