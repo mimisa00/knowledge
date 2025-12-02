@@ -54,7 +54,9 @@ mysql -u root -p{password} < backup.sql
 GRANT ALL PRIVILEGES ON *.* TO 'username'@'%' IDENTIFIED BY 'password' WITH GRANT OPTION;  
   
 -- 指定資料庫全權限  
-GRANT ALL PRIVILEGES ON `database_name`.* TO 'username'@'host' IDENTIFIED BY 'password' WITH GRANT OPTION;  
+GRANT ALL PRIVILEGES ON `database_name`.* TO 'username'@'host' IDENTIFIED BY 'password' WITH GRANT OPTION;
+-- 密碼直接設定為 BASE64
+GRANT ALL PRIVILEGES ON `database_name`.* TO 'username'@'host' IDENTIFIED BY PASSWORD '*8F2B6E79FCEBFB5482D1F81276D05E1512DA6D0C';
   
 -- 指定資料庫只讀  
 GRANT SELECT, LOCK TABLES ON `database_name`.* TO 'username'@'host' WITH GRANT OPTION;  
@@ -91,7 +93,6 @@ INSTALL PLUGIN federated SONAME 'ha_federatedx.so';
 -- 移除插件  
 UNINSTALL PLUGIN FEDERATED;
 ```
-  
   
 ## 6. 設定調整  
 # my.cnf / my.ini 設定  
