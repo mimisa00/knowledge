@@ -10,8 +10,8 @@ https://docs.claude.com/zh-TW/docs/claude-code/google-vertex-ai
 <img width="1912" height="904" alt="image" src="https://github.com/user-attachments/assets/21f558d9-24d1-4aa1-a9f5-851f7207ac74" />
 
 #### 選擇啟用模型
-<img width="1912" height="904" alt="image" src="https://github.com/user-attachments/assets/91172ad9-d053-4b50-94e7-5d63bc79f8f3" />
-<img width="1556" height="892" alt="image" src="https://github.com/user-attachments/assets/8010b1c2-e5a1-4b08-a215-877e4069a3db" />
+<img width="1898" height="895" alt="image" src="https://github.com/user-attachments/assets/227395d1-ea76-4024-be3e-d9b64451584b" />
+<img width="1556" height="892" alt="image" src="https://github.com/user-attachments/assets/62c7f6b1-c5ba-4526-b0bd-6b3d2bf53a59" />
 
 #### 如果 Vertex API 尚未啟用會提示需要先啟用 Vertex API 
 <img width="1667" height="863" alt="image" src="https://github.com/user-attachments/assets/2cca4a5b-ee72-41eb-85ba-1b73b59c3ac3" />
