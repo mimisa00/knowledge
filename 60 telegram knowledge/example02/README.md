@@ -6,17 +6,20 @@
 2. 登入工作主機作業程序繁瑣 vpn > host auth login > account switch role
 3. 同時需要維護多台主機
 4. 主機與主機間網路無法互通
-5. 主機之間有可以 nfs 可以共享目錄
-6. 主機能夠探訪 http
+5. 主機之間唯一溝通管道剩 nfs 共享目錄
+6. 主機僅能夠探訪 https，但是外部網路無法探訪主機
+7. 不想在公開網路架設 MQTT 發佈/訂閱服務
 
 ## Structure
 ```
 example02/
 ├── Dockerfile            # 運作 telegram bot app image build file
 ├── README.md             # Project documentation
+├── log                   # woker 主機 log 存放目錄
 ├── host_list.txt         # 要維護的主機列表 : 主機 hostname 需依照特定格式設定名稱 xxx-ap xxx-proxy
 ├── history/              # 工作記錄留存目錄 : 當 master 確認此次任務皆己完成時，會將 reslut 的所有人容打包送到此目錄下留存備查
 ├── master_bot.py         # Python application : 驅動 bot 產生 telegram chat panel 及接收指令，接收到指令會將任務派送到共享目錄，並且監控任務是否順利完成
+├── pid/                  # woker 主機運作 python時 pid 的存放目錄
 ├── queue/                # 派送工作任務目錄 : worker 主機會於此目錄認領自己的工作
 ├── results/              # 派送工作任務目錄 : worker 主機工作完成後會將自己的工作從 queue 目錄轉移到 results 目錄暫時存放
 ├── run_bot_mt_master.sh  # 啟用容器環境驅動 master_boy.py 
