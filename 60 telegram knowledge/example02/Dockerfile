@@ -15,6 +15,5 @@ RUN pip install --no-cache-dir python-telegram-bot==13.15
 
 # 將程式碼複製進容器
 COPY master_bot.py .
-COPY worker_agent.py .
 
 # 預設不設定 ENTRYPOINT，由 run_docker.sh 來決定啟動哪個程式
