@@ -1,5 +1,5 @@
 ## 用途
-此 example 是透過 telegram bot listening 將要派送的任務，送到各個主機共享的 nfs 目錄，再由各個主機自行認領任務進行作業
+此 example 是透過 telegram bot listening chat 內使用者想要維護的作業，然後將維護的作業，當成任務派送到各個主機共享的 nfs 目錄，再由各個主機自行認領任務進行相關作業
 
 ## 背景說明
 1. 需進行特定例維護作業
@@ -16,7 +16,7 @@ example02/
 ├── README.md             # Project documentation
 ├── host_list.txt         # 要維護的主機列表 : 主機 hostname 需依照特定格式設定名稱 xxx-ap xxx-proxy
 ├── history/              # 工作記錄留存目錄 : 當 master 確認此次任務皆己完成時，會將 reslut 的所有人容打包送到此目錄下留存備查
-├── master_bot.py         # Python application : 驅動 bot 產生 telegram chat panel 及接收指令，接收到指令會將任務派送到共享目錄
+├── master_bot.py         # Python application : 驅動 bot 產生 telegram chat panel 及接收指令，接收到指令會將任務派送到共享目錄，並且監控任務是否順利完成
 ├── queue/                # 派送工作任務目錄 : worker 主機會於此目錄認領自己的工作
 ├── results/              # 派送工作任務目錄 : worker 主機工作完成後會將自己的工作從 queue 目錄轉移到 results 目錄暫時存放
 ├── run_bot_mt_master.sh  # 啟用容器環境驅動 master_boy.py 
