@@ -50,4 +50,5 @@ sh run_bot_mt_worker.sh.sh
 
 
 ### 備註
-此 example 的工作目錄，實務上每個人所需不同，故請注意此點並適當調整之
+1. 此 example 的工作目錄，實務上每個人所需不同，故請注意此點並適當調整之
+2. worker_agent.py action 相關指令請依自行需求調整
