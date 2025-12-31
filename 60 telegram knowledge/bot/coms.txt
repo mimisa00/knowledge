@@ -1,4 +1,0 @@
-com_a
-com_b
-com_c
-com_d
