@@ -1,0 +1,467 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "permission": {
+    "read": "allow",
+    "edit": "allow",
+    // 無界限的檔案系統掃描會讓 session 靜默卡死(bash tool 沒有預設 timeout),
+    // 且 /proc/registry* 在 MINGW64 底下是整個 Windows 登錄檔,find / 實質上跑不完。
+    // 規則是「最後一條匹配的勝出」,所以 catch-all "*" 必須放在最前面。
+    // 註:這是安全帶不是牆(cd / && find . 之類繞得過去),主要規範在 AGENTS.md「Shell 約定」。
+    "bash": {
+      "*": "allow",
+      "find / *": "deny",
+      "find ~*": "deny",
+      "find $HOME*": "deny",
+      "* find / *": "deny",
+      "* find ~*": "deny",
+      "* find $HOME*": "deny"
+    },
+    // external_directory 是與 read/edit/bash 平行的獨立閘門,管的是「碰到專案根目錄外的路徑」。
+    // 判定基準是 worktree 而非 HOME,所以以 root 跑時 ~/ 一律算外部(專案在 /home/fusion-ap/ 底下),
+    // 不設就落回預設值 ask,無人值守流程會被權限框卡住。搬動專案位置解決不了,只能在這裡開。
+    // 同樣是「最後一條匹配的勝出」,catch-all "*" 放最前面;留 ask 以保住寫到專案外的攔截。
+    "external_directory": {
+      "*": "ask",
+      "/tmp/**": "allow",
+      "/etc/**": "allow",
+      "/usr/**": "allow",
+      "/root/.config/opencode/**": "allow",
+      "/root/.m2/**": "allow",
+      "/root/.ssh/**": "allow"
+    },
+    "webfetch": "allow",
+    "websearch": "allow",
+    "grep": "allow",
+    "glob": "allow",
+    "skill": "allow",
+    "question": "allow",
+    "playwright_*": "deny",
+    "context7_*": "deny"
+  },
+  "plugin": [
+    "@franlol/opencode-md-table-formatter@latest",
+    "@tarquinen/opencode-dcp@latest",
+    "@kdcokenny/opencode-worktree",
+    //"oh-my-openagent@latest"
+  ],
+  "model": "llama/Qwen3.8-27B",
+  "provider": {
+    //local llama
+    //"llama": {
+    //"npm": "@ai-sdk/openai-compatible",
+    //"name": "llama Local",
+    //"options": {
+    //  "baseURL": "http://localhost:8000/v1",
+    //  "apiKey": "llama"
+    //},
+    //"models": {
+    //  "Qwen3.8-27B": {
+    //    "name": "Qwen3.8-27B (default)",
+    //    "limit": {
+    //      "context": 65536,
+    //      "output": 32768
+    //    },
+    //    "variants": {
+    //      "fast": {
+    //        "body": {
+    //          "temperature": 0.7,
+    //          "top_p": 0.80,
+    //          "top_k": 20,
+    //          "min_p": 0.0,
+    //          "presence_penalty": 1.5,
+    //          "repetition_penalty": 1.0,
+    //          "chat_template_kwargs": {
+    //            "enable_thinking": false
+    //          }
+    //        }
+    //      },
+    //      "low": {
+    //        "body": {
+    //          "temperature": 1.0,
+    //          "top_p": 0.95,
+    //          "top_k": 20,
+    //          "min_p": 0.0,
+    //          "presence_penalty": 0.0,
+    //          "repetition_penalty": 1.0,
+    //          "chat_template_kwargs": {
+    //            "enable_thinking": true,
+    //            "reasoning_effort": "low"
+    //          }
+    //        }
+    //      },
+    //      "medium": {
+    //        "body": {
+    //          "temperature": 1.0,
+    //          "top_p": 0.95,
+    //          "top_k": 20,
+    //          "min_p": 0.0,
+    //          "presence_penalty": 0.0,
+    //          "repetition_penalty": 1.0,
+    //          "chat_template_kwargs": {
+    //            "enable_thinking": true,
+    //            "reasoning_effort": "medium"
+    //          }
+    //        }
+    //      },
+    //      "xhigh": {
+    //        "body": {
+    //          "temperature": 1.0,
+    //          "top_p": 0.95,
+    //          "top_k": 20,
+    //          "min_p": 0.0,
+    //          "presence_penalty": 0.0,
+    //          "repetition_penalty": 1.0,
+    //          "chat_template_kwargs": {
+    //            "enable_thinking": true,
+    //            "reasoning_effort": "xhigh"
+    //          }
+    //        }
+    //      }
+    //    },
+    //    "attachment": true,
+    //    "modalities": {
+    //      "input": [
+    //        "text",
+    //        "image"
+    //      ],
+    //      "output": [
+    //        "text"
+    //      ]
+    //    },
+    //    "capabilities": {
+    //      "input": {
+    //        "image": true
+    //      }
+    //    }
+    //  },
+    //  "Qwen3.8-27B-fast": {
+    //    "name": "Qwen3.8-27B (fast)",
+    //    "limit": {
+    //      "context": 65536,
+    //      "output": 32768
+    //    },
+    //    "options": {
+    //      "temperature": 0.7,
+    //      "top_p": 0.80,
+    //      "top_k": 20,
+    //      "min_p": 0.0,
+    //      "presence_penalty": 1.5,
+    //      "repetition_penalty": 1.0,
+    //      "chat_template_kwargs": {
+    //        "enable_thinking": false
+    //      }
+    //    },
+    //    "attachment": true,
+    //    "modalities": {
+    //      "input": [
+    //        "text",
+    //        "image"
+    //      ],
+    //      "output": [
+    //        "text"
+    //      ]
+    //    },
+    //    "capabilities": {
+    //      "input": {
+    //        "image": true
+    //      }
+    //    }
+    //  },
+    //  "Qwen3.8-27B-low": {
+    //    "name": "Qwen3.8-27B (low)",
+    //    "limit": {
+    //      "context": 65536,
+    //      "output": 32768
+    //    },
+    //    "options": {
+    //      "temperature": 1.0,
+    //      "top_p": 0.95,
+    //      "top_k": 20,
+    //      "min_p": 0.0,
+    //      "presence_penalty": 0.0,
+    //      "repetition_penalty": 1.0,
+    //      "chat_template_kwargs": {
+    //        "enable_thinking": true,
+    //        "reasoning_effort": "low"
+    //      }
+    //    },
+    //    "attachment": true,
+    //    "modalities": {
+    //      "input": [
+    //        "text",
+    //        "image"
+    //      ],
+    //      "output": [
+    //        "text"
+    //      ]
+    //    },
+    //    "capabilities": {
+    //      "input": {
+    //        "image": true
+    //      }
+    //    }
+    //  },
+    //  "Qwen3.8-27B-medium": {
+    //    "name": "Qwen3.8-27B (medium)",
+    //    "limit": {
+    //      "context": 65536,
+    //      "output": 32768
+    //    },
+    //    "options": {
+    //      "temperature": 1.0,
+    //      "top_p": 0.95,
+    //      "top_k": 20,
+    //      "min_p": 0.0,
+    //      "presence_penalty": 0.0,
+    //      "repetition_penalty": 1.0,
+    //      "chat_template_kwargs": {
+    //        "enable_thinking": true,
+    //        "reasoning_effort": "medium"
+    //      }
+    //    },
+    //    "attachment": true,
+    //    "modalities": {
+    //      "input": [
+    //        "text",
+    //        "image"
+    //      ],
+    //      "output": [
+    //        "text"
+    //      ]
+    //    },
+    //    "capabilities": {
+    //      "input": {
+    //        "image": true
+    //      }
+    //    }
+    //  },
+    //  "Qwen3.8-27B-xhigh": {
+    //    "name": "Qwen3.8-27B (xhigh)",
+    //    "limit": {
+    //      "context": 65536,
+    //      "output": 32768
+    //    },
+    //    "options": {
+    //      "temperature": 1.0,
+    //      "top_p": 0.95,
+    //      "top_k": 20,
+    //      "min_p": 0.0,
+    //      "presence_penalty": 0.0,
+    //      "repetition_penalty": 1.0,
+    //      "chat_template_kwargs": {
+    //        "enable_thinking": true,
+    //        "reasoning_effort": "xhigh"
+    //      }
+    //    },
+    //    "attachment": true,
+    //    "modalities": {
+    //      "input": [
+    //        "text",
+    //        "image"
+    //      ],
+    //      "output": [
+    //        "text"
+    //      ]
+    //    },
+    //    "capabilities": {
+    //      "input": {
+    //        "image": true
+    //      }
+    //    }
+    //  }
+    //}
+    //},
+    // --------- litellm
+    "llama": {
+      "npm": "@ai-sdk/openai-compatible", //不要換成 vertex 或其它格式，litellm 會自動轉換
+      "name": "LiteLLM Gateway",
+      "options": {
+        // 結尾不要留斜線,避免組出 /v1//chat/completions
+        "baseURL": "https://voidnull.ai/v1",
+        // 請填入你的 LiteLLM Virtual Key
+        "apiKey": "********"
+      },
+      "models": {
+        // 主 entry:預設(走 LiteLLM 的 default reasoning_effort = medium)
+        "Qwen3.8-27B": {
+          "id": "gemini-3.8-flash",
+          "name": "Gemini 3.8 Flash",
+          "limit": {
+            "context": 262144, // 1M  tokens context window (1M = 1048576 256K = 262144)
+            "output": 65536 // 65K tokens max output
+          },
+          "variants": {
+            "low": {
+              "reasoning_effort": "low"
+            },
+            "medium": {
+              "reasoning_effort": "medium"
+            },
+            "xhigh": {
+              "reasoning_effort": "high"
+            }
+          },
+          "attachment": true,
+          "tool_call": true,
+          "modalities": {
+            "input": [
+              "text",
+              "image",
+              "video",
+              "audio"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "Qwen3.8-27B-fast": {
+          "id": "gemini-3.8-flash",
+          "name": "Gemini 3.8 Flash (fast)",
+          "attachment": true,
+          "tool_call": true,
+          "limit": {
+            "context": 32768, // 32K — 腳本操作型，不需大 context
+            "output": 8192 // 8K — 純 shell/API 操作，極短輸出
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image",
+              "video",
+              "audio"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "options": {
+            "reasoning_effort": "low"
+          },
+          "variants": {
+            "fast": {
+              "reasoning_effort": "low"
+            }
+          }
+        },
+        "Qwen3.8-27B-low": {
+          "id": "gemini-3.8-flash",
+          "name": "Gemini 3.8 Flash (low)",
+          "attachment": true,
+          "tool_call": true,
+          "limit": {
+            "context": 65536, // 64K — 簡單分析型
+            "output": 16384 // 16K — 結構化輸出
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image",
+              "video",
+              "audio"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "options": {
+            "reasoning_effort": "low"
+          },
+          "variants": {
+            "low": {
+              "reasoning_effort": "low"
+            }
+          }
+        },
+        "Qwen3.8-27B-medium": {
+          "id": "gemini-3.8-flash",
+          "name": "Gemini 3.8 Flash (medium)",
+          "attachment": true,
+          "tool_call": true,
+          "limit": {
+            "context": 131072, // 128K — 通用推理型
+            "output": 32768 // 32K — 中等長度報告/程式碼
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image",
+              "video",
+              "audio"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "options": {
+            "reasoning_effort": "medium"
+          },
+          "variants": {
+            "medium": {
+              "reasoning_effort": "medium"
+            }
+          }
+        },
+        "Qwen3.8-27B-xhigh": {
+          "id": "gemini-3.8-flash",
+          "name": "Gemini 3.8 Flash (high)",
+          "attachment": true,
+          "tool_call": true,
+          "limit": {
+            "context": 524288, // 512K — 深度推理需讀大量源碼
+            "output": 65536 // 65K — 維持上限，允許完整 spec/CR 輸出
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image",
+              "video",
+              "audio"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "options": {
+            "reasoning_effort": "high"
+          },
+          "variants": {
+            "xhigh": {
+              "reasoning_effort": "high"
+            }
+          }
+        }
+      }
+    },
+    "mcp": {
+      // 賦予 opencode 網頁點擊能力,僅供 qa agent 在驗證階段使用
+      "playwright": {
+        "type": "local",
+        "command": [
+          "npx",
+          "-y",
+          "@playwright/mcp@latest",
+          "--isolated", // 每次 session 用乾淨的 browser context,不留 cookie/localStorage,QA 不該汙染真實登入態
+          "--headless", // 沒有桌面環境的機器/CI 上必要
+          "--caps=tabs,storage", // 新增:tabs 給目前分頁/URL,storage 給 cookie 讀寫
+          "--output-dir=.qa-artifacts/playwright"
+        ],
+        "enabled": true
+      },
+      // 官方套件/框架文件查詢(依名稱抓最新版本文件),僅供 librarian agent 使用
+      // 免費層即可用,速率限制較低;如需更高額度,到 https://context7.com/dashboard 申請 API key,
+      // 申請後把下面 command 陣列改成 ["npx", "-y", "@upstash/context7-mcp", "--api-key", "你的KEY"]
+      "context7": {
+        "type": "local",
+        "command": [
+          "npx",
+          "-y",
+          "@upstash/context7-mcp",
+          "--api-key",
+          "*********"
+        ],
+        "enabled": true
+      }
+    }
+  }
+}
