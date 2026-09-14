@@ -47,3 +47,41 @@ npx @grinev/opencode-telegram-bot
 # /projects 選擇運作專案
 # /sessions 撰擇主對話
 ```
+
+
+
+## 透過 MCP 觸發 playwright 時截圖中文字顯示異常
+##### 如果 opencode 運作在 Rocky Linux Base 環境，預設無中文語系字體，故造成截圖時中文字部份呈現方塊或消失的狀況，必須直接在 Rocky Linux 系統中安裝中文字型與語系包
+```
+# 1. 安裝繁體中文語系包
+sudo dnf install -y langpacks-zh_TW glibc-langpack-zh
+
+# 2. 安裝 Google 官方的開源中文字型（Noto CJK，包含黑體與明體）
+sudo dnf install -y google-noto-cjk-fonts google-noto-sans-cjk-ttc-fonts
+
+# 3. 重新整理系統的字型快取
+sudo fc-cache -fv
+```
+##### 除此之外 opencode.jsonc 也需設定環境參數，讓 playwright 時載入系統的中文語系資訊
+```
+  "mcp": {
+    "playwright": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@playwright/mcp@latest",
+        "--isolated",
+        "--headless",
+        "--caps=tabs,storage",
+        "--output-dir=.where_dir_your_want"
+      ],
+      "enabled": true,
+      "env": {
+        // 1. 強制讓 Playwright 啟動的 Chromium 使用中文語系
+        "LANGUAGE": "zh_TW.UTF-8",
+        "LANG": "zh_TW.UTF-8",
+        "LC_ALL": "zh_TW.UTF-8"
+      }
+    },
+```
