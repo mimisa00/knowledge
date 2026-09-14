@@ -250,7 +250,13 @@
         "--caps=tabs,storage",  // 新增:tabs 給目前分頁/URL,storage 給 cookie 讀寫
         "--output-dir=.qa-artifacts/playwright"
       ],
-      "enabled": true
+      "enabled": true,
+      "env": {
+        // 1. 強制讓 Playwright 啟動的 Chromium 使用中文語系
+        "LANGUAGE": "zh_TW.UTF-8",
+        "LANG": "zh_TW.UTF-8",
+        "LC_ALL": "zh_TW.UTF-8"
+      }
     },
     // 官方套件/框架文件查詢(依名稱抓最新版本文件),僅供 librarian agent 使用
     // 免費層即可用,速率限制較低;如需更高額度,到 https://context7.com/dashboard 申請 API key,
